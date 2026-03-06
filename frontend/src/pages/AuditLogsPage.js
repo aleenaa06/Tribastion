@@ -12,6 +12,7 @@ export default function AuditLogsPage() {
     const [actionFilter, setActionFilter] = useState('');
     const [loading, setLoading] = useState(true);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => { loadLogs(); }, [page, actionFilter]);
 
     const loadLogs = async () => {

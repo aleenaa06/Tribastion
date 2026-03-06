@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { userAPI } from '../services/api';
 import toast from 'react-hot-toast';
-import { HiUsers, HiPlus, HiPencil, HiTrash, HiShieldCheck, HiUser, HiX } from 'react-icons/hi';
+import { HiPlus, HiPencil, HiTrash, HiShieldCheck, HiUser, HiX } from 'react-icons/hi';
 
 export default function UsersPage() {
     const { darkMode } = useTheme();
     const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [form, setForm] = useState({ username: '', email: '', password: '', role: 'user', full_name: '' });
 
@@ -20,7 +19,6 @@ export default function UsersPage() {
         } catch (err) {
             console.error('Load users error:', err);
         }
-        setLoading(false);
     };
 
     const handleCreate = async (e) => {

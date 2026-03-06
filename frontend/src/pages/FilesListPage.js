@@ -16,6 +16,7 @@ export default function FilesListPage() {
     const [statusFilter, setStatusFilter] = useState('');
     const [loading, setLoading] = useState(true);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => { loadFiles(); }, [page, statusFilter]);
 
     const loadFiles = async () => {
