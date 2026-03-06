@@ -81,13 +81,8 @@ def health():
 
 
 if __name__ == '__main__':
-    print("""
-╔══════════════════════════════════════════════╗
-║      🔍 TRIBASTION PII DETECTION SERVICE     ║
-║           Regex + spaCy NER Engine            ║
-╠══════════════════════════════════════════════╣
-║  Server:  http://localhost:5001               ║
-║  Status:  Running                             ║
-╚══════════════════════════════════════════════╝
-    """)
+    print("=== TRIBASTION PII DETECTION SERVICE ===")
+    print("Server: http://localhost:5001")
+    print("Status: Running")
+    print("=========================================")
     app.run(host='0.0.0.0', port=5001, debug=True)
