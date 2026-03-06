@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "Rahul Sharma",
+        "email": "rahul.sharma@email.com",
+        "phone": "+91-98765-43210",
+        "pan": "ABCPD1234E",
+        "aadhaar": "1234-5678-9012",
+        "ip_address": "192.168.1.100",
+        "address": "42 MG Road, Bangalore, Karnataka 560001"
+    },
+    {
+        "id": 2,
+        "name": "Priya Patel",
+        "email": "priya.patel@gmail.com",
+        "phone": "9876543210",
+        "pan": "BXYPK5678F",
+        "aadhaar": "9876-5432-1098",
+        "ip_address": "10.0.0.55",
+        "address": "15 Linking Road, Mumbai, Maharashtra 400050"
+    },
+    {
+        "id": 3,
+        "name": "Aman Gupta",
+        "email": "aman.gupta@company.co.in",
+        "phone": "+91 87654 32109",
+        "pan": "CZQPG9012H",
+        "aadhaar": "5678-1234-9876",
+        "ip_address": "172.16.0.1",
+        "address": "78 Connaught Place, New Delhi, Delhi 110001"
+    }
+]
