@@ -1,0 +1,28 @@
+{
+  "name": "tribastion",
+  "version": "1.0.0",
+  "scripts": {
+    "backend": "cd backend && npm install && node src/server.js",
+    "frontend": "cd frontend && npm install && npm start",
+    "pii": "cd pii-service && python app.py",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run pii\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "description": "Tribastion is a production-ready, full-stack web platform built for automatic detection, extraction, and sanitization of Personally Identifiable Information (PII) from multiple data formats.",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleenaa06/Tribastion.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aleenaa06/Tribastion/issues"
+  },
+  "homepage": "https://github.com/aleenaa06/Tribastion#readme"
+}

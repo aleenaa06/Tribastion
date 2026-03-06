@@ -14,7 +14,7 @@ async function authenticateToken(req, res, next) {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         await getDb(); // ensure db is ready
-        const user = dbPrepare('SELECT id, username, email, role, full_name, is_active FROM users WHERE id = ?').get(decoded.userId);
+        const user = await dbPrepare('SELECT id, username, email, role, full_name, is_active FROM users WHERE id = ?').get(decoded.userId);
 
         if (!user || !user.is_active) {
             return res.status(401).json({ error: 'User not found or inactive' });

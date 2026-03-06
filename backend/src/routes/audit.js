@@ -27,12 +27,12 @@ router.get('/', authenticateToken, requireRole('admin'), async (req, res) => {
         query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
         params.push(parseInt(limit), offset);
 
-        const logs = dbPrepare(query).all(...params);
+        const logs = await dbPrepare(query).all(...params);
 
         let countQuery = 'SELECT COUNT(*) as total FROM audit_logs';
         if (conditions.length > 0) countQuery += ' WHERE ' + conditions.join(' AND ');
         const countParams = params.slice(0, params.length - 2);
-        const countResult = dbPrepare(countQuery).get(...countParams);
+        const countResult = await dbPrepare(countQuery).get(...countParams);
         const total = countResult ? countResult.total : 0;
 
         res.json({ logs, total, page: parseInt(page), limit: parseInt(limit) });

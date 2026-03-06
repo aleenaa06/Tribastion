@@ -9,28 +9,28 @@ router.get('/', authenticateToken, async (req, res) => {
   try {
     await getDb();
 
-    const totalFiles = (dbPrepare('SELECT COUNT(*) as count FROM files').get() || {}).count || 0;
-    const completedFiles = (dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'completed'").get() || {}).count || 0;
-    const processingFiles = (dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'processing'").get() || {}).count || 0;
-    const failedFiles = (dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'failed'").get() || {}).count || 0;
-    const totalPii = (dbPrepare('SELECT COUNT(*) as count FROM pii_detections').get() || {}).count || 0;
-    const totalUsers = (dbPrepare('SELECT COUNT(*) as count FROM users').get() || {}).count || 0;
+    const totalFiles = (await dbPrepare('SELECT COUNT(*) as count FROM files').get() || {}).count || 0;
+    const completedFiles = (await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'completed'").get() || {}).count || 0;
+    const processingFiles = (await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'processing'").get() || {}).count || 0;
+    const failedFiles = (await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'failed'").get() || {}).count || 0;
+    const totalPii = (await dbPrepare('SELECT COUNT(*) as count FROM pii_detections').get() || {}).count || 0;
+    const totalUsers = (await dbPrepare('SELECT COUNT(*) as count FROM users').get() || {}).count || 0;
 
-    const piiByType = dbPrepare(`
+    const piiByType = await dbPrepare(`
       SELECT pii_type, COUNT(*) as count 
       FROM pii_detections 
       GROUP BY pii_type 
       ORDER BY count DESC
     `).all();
 
-    const filesByType = dbPrepare(`
+    const filesByType = await dbPrepare(`
       SELECT file_type, COUNT(*) as count 
       FROM files 
       GROUP BY file_type 
       ORDER BY count DESC
     `).all();
 
-    const recentFiles = dbPrepare(`
+    const recentFiles = await dbPrepare(`
       SELECT DATE(created_at) as date, COUNT(*) as count 
       FROM files 
       WHERE created_at >= datetime('now', '-7 days')
@@ -38,14 +38,14 @@ router.get('/', authenticateToken, async (req, res) => {
       ORDER BY date
     `).all();
 
-    const byMethod = dbPrepare(`
+    const byMethod = await dbPrepare(`
       SELECT sanitization_method, COUNT(*) as count 
       FROM files 
       WHERE status = 'completed'
       GROUP BY sanitization_method
     `).all();
 
-    const avgProcessing = dbPrepare(`
+    const avgProcessing = await dbPrepare(`
       SELECT AVG(processing_time_ms) as avg_time 
       FROM files WHERE status = 'completed'
     `).get();

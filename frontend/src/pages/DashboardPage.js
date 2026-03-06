@@ -174,7 +174,7 @@ export default function DashboardPage() {
                     </Link>
                 </div>
 
-                {recentFiles.length > 0 ? (
+                {recentFiles && recentFiles.length > 0 ? (
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {recentFiles.map(file => (
+                                {(recentFiles || []).map(file => (
                                     <tr key={file.id} className={`border-t ${darkMode ? 'border-white/5 hover:bg-white/[0.02]' : 'border-gray-50 hover:bg-gray-50'} transition-colors`}>
                                         <td className="py-3 px-4">
                                             <Link to={`/dashboard/files/${file.id}`} className={`text-sm font-medium hover:text-cyan-400 transition-colors ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>

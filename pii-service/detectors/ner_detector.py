@@ -6,13 +6,13 @@ try:
     try:
         nlp = spacy.load('en_core_web_sm')
     except OSError:
-        print("⚠️  spaCy model 'en_core_web_sm' not found. Downloading...")
+        print("WARNING: spaCy model 'en_core_web_sm' not found. Downloading...")
         from spacy.cli import download
         download('en_core_web_sm')
         nlp = spacy.load('en_core_web_sm')
     SPACY_AVAILABLE = True
 except Exception as e:
-    print(f"⚠️  spaCy initialization failed ({e}). NER detection disabled.")
+    print(f"WARNING: spaCy initialization failed ({e}). NER detection disabled.")
     SPACY_AVAILABLE = False
     nlp = None
 
