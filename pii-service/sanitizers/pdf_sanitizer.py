@@ -38,31 +38,15 @@ def sanitize_pdf(input_path, output_path, method):
                 # Search for the exact string value on the page
                 text_instances = page.search_for(value)
                 
-                # Redact each instance found
+                    # Redact each instance found
                 for inst in text_instances:
-                    method_lower = method.lower()
+                    # Draw a black rectangle only for 'redaction' method
+                    fill_color = (0, 0, 0) if method.lower() == 'redaction' else None
                     
-                    if method_lower == 'redaction':
-                        # Classic black box redaction
-                        page.add_redact_annot(inst, fill=(0, 0, 0))
-                    else:
-                        # For masking and tokenization: 
-                        # 1. Add a redaction to wipe the underlying text (white fill)
-                        # 2. Add the replacement text on top
-                        replacement_text = apply_sanitization(value, label, method)
-                        page.add_redact_annot(inst, fill=(1, 1, 1)) # White out the original text
-                        
-                        # Calculate position to draw the new text
-                        # Using the bottom-left of the bounding box as roughly the baseline
-                        point = fitz.Point(inst.x0, inst.y1 - 2)
-                        
-                        # Choose color: green for tokenization, blue/cyan for masking, to match the UI theme
-                        text_color = (0, 0.7, 0) if method_lower == 'tokenization' else (0.2, 0.6, 0.9)
-                        
-                        # Insert the new text on top of where the redaction will occur
-                        page.insert_text(point, replacement_text, fontsize=10, color=text_color)
-                        
-            # Apply all redactions on the page (this physically wipes the underlying text & draws the fills)
+                    # Add a redaction annotation over the text
+                    page.add_redact_annot(inst, text=apply_sanitization(value, label, method), fill=fill_color, text_color=(0,0,0))
+            
+            # Apply all redactions on the page
             page.apply_redactions()
             
         doc.save(output_path, garbage=4, deflate=True, clean=True)
