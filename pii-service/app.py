@@ -14,24 +14,27 @@ CORS(app)
 
 def merge_detections(regex_results, ner_results):
     """Merge and deduplicate detections from regex and NER."""
-    all_detections = regex_results.copy()
+    # Combine all results. Regex results come first so they take priority 
+    # if there is an exact overlap (regexes are generally more precise than NER).
+    all_results = regex_results + ner_results
 
-    for ner_det in ner_results:
-        # Check if this NER detection overlaps with any regex detection
+    deduplicated = []
+    
+    for det in all_results:
         is_duplicate = False
-        for regex_det in regex_results:
+        for saved_det in deduplicated:
             # Check for overlap
-            if (ner_det['start'] < regex_det['end'] and ner_det['end'] > regex_det['start']):
+            if (det['start'] < saved_det['end'] and det['end'] > saved_det['start']):
                 is_duplicate = True
                 break
-
+                
         if not is_duplicate:
-            all_detections.append(ner_det)
+            deduplicated.append(det)
 
-    # Sort by start position
-    all_detections.sort(key=lambda x: x['start'])
+    # Sort by start position for subsequent processing
+    deduplicated.sort(key=lambda x: x['start'])
 
-    return all_detections
+    return deduplicated
 
 
 @app.route('/detect', methods=['POST'])
@@ -54,13 +57,13 @@ def detect_pii():
         # Summary
         summary = {}
         for det in detections:
-            pii_type = det['type']
+            pii_type = det['label']
             if pii_type not in summary:
                 summary[pii_type] = 0
             summary[pii_type] += 1
 
         return jsonify({
-            'detections': detections,
+            'entities': detections,
             'total': len(detections),
             'summary': summary,
             'methods_used': ['regex', 'ner']

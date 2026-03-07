@@ -240,7 +240,7 @@ My PAN is [REDACTED_PAN].`;
                     </div>
                     <div className="flex items-center space-x-2 text-sm">
                         <HiCode className="w-4 h-4" />
-                        <span>Built for Hackathon 2024</span>
+                        <span>Built for Hackathon 2026</span>
                     </div>
                 </div>
             </footer>

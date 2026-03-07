@@ -18,11 +18,10 @@ except Exception as e:
 
 # Entity types that map to PII
 ENTITY_MAPPING = {
-    'PERSON': 'name',
-    'GPE': 'address',
-    'LOC': 'address',
-    'FAC': 'address',
-    'ORG': 'organization',
+    'PERSON': 'NAME',
+    'GPE': 'ADDRESS',
+    'LOC': 'ADDRESS',
+    'FAC': 'ADDRESS',
 }
 
 # Common false positives to skip
@@ -62,8 +61,8 @@ def detect_with_ner(text):
             pii_type = ENTITY_MAPPING[ent.label_]
 
             detections.append({
-                'type': pii_type,
-                'value': value,
+                'label': pii_type,
+                'text': value,
                 'start': ent.start_char,
                 'end': ent.end_char,
                 'confidence': 0.75,

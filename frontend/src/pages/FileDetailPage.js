@@ -37,7 +37,7 @@ export default function FileDetailPage() {
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.download = `sanitized_${file.original_name.replace(/\.[^.]+$/, '.txt')}`;
+            link.download = `sanitized_${file.original_name}`;
             link.click();
             window.URL.revokeObjectURL(url);
             toast.success('Download started!');

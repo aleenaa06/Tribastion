@@ -47,8 +47,9 @@ export default function FileUploadPage() {
         setUploading(true);
         try {
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('method', method);
             formData.append('sanitization_method', method);
+            formData.append('file', file);
 
             const response = await fileAPI.upload(formData);
             setUploadResult(response.data);
