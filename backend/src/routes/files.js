@@ -235,7 +235,7 @@ router.get('/:id/download', authenticateToken, async (req, res) => {
 
         const originalExt = path.extname(file.original_name);
         const nameWithoutExt = file.original_name.replace(originalExt, '');
-        res.download(downloadPath, `sanitized_${nameWithoutExt}.txt`);
+        res.download(downloadPath, `sanitized_${nameWithoutExt}${originalExt}`);
     } catch (err) {
         console.error('Download error:', err);
         res.status(500).json({ error: 'Download failed' });
