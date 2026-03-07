@@ -5,7 +5,10 @@
     "backend": "cd backend && npm install && node src/server.js",
     "frontend": "cd frontend && npm install && npm start",
     "pii": "cd pii-service && python app.py",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run pii\""
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run pii\"",
+    "backend:prod": "cd backend && node src/server.js",
+    "pii:prod": "cd pii-service && gunicorn app:app -w 2 -b 0.0.0.0:5001 --timeout 120",
+    "start": "concurrently \"npm run backend:prod\" \"npm run pii:prod\""
   },
   "dependencies": {
     "concurrently": "^8.2.0"
