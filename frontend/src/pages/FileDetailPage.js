@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
 import { fileAPI } from '../services/api';
 import toast from 'react-hot-toast';
 import { HiArrowLeft, HiDownload, HiEye, HiShieldCheck, HiClock, HiDocumentText, HiRefresh } from 'react-icons/hi';
@@ -10,7 +9,6 @@ import PIIStats from '../components/PIIStats';
 export default function FileDetailPage() {
     const { id } = useParams();
     const { isAdmin } = useAuth();
-    const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [file, setFile] = useState(null);
     const [detections, setDetections] = useState([]);

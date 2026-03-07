@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import {
     HiShieldCheck, HiLockClosed, HiDocumentSearch,
     HiCloudUpload, HiDatabase, HiCode,
-    HiArrowRight, HiOutlineShieldExclamation,
+    HiOutlineShieldExclamation,
     HiOutlineClipboardCheck, HiOutlineDownload,
     HiOutlineColorSwatch, HiOutlineTag
 } from 'react-icons/hi';

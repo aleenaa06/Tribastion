@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
-import { useTheme } from '../context/ThemeContext';
 import { fileAPI } from '../services/api';
 import toast from 'react-hot-toast';
 import { HiCloudUpload, HiDocumentText, HiX, HiArrowRight, HiCheckCircle } from 'react-icons/hi';
@@ -20,7 +19,6 @@ const ACCEPTED_TYPES = {
 };
 
 export default function FileUploadPage() {
-    const { darkMode } = useTheme();
     const navigate = useNavigate();
     const [file, setFile] = useState(null);
     const [method, setMethod] = useState('redaction');

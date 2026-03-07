@@ -1,4 +1,4 @@
-export default {
+const metrics = {
   paddingHorizontal: '',
   radius: {
     small: '',
@@ -6,3 +6,5 @@ export default {
     large: '',
   },
 };
+
+export default metrics;
