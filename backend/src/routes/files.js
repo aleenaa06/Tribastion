@@ -81,8 +81,8 @@ router.post('/upload', authenticateToken, upload.single('file'), async (req, res
             message: 'File uploaded and processing started'
         });
     } catch (err) {
-        console.error('Upload error:', err);
-        res.status(500).json({ error: 'File upload failed' });
+        console.error('Upload Error (Detailed):', err.message, err.stack);
+        res.status(500).json({ error: 'File upload failed', details: err.message });
     }
 });
 
@@ -129,7 +129,7 @@ async function processFile(fileId, filePath, mimeType, method, user) {
             JSON.stringify({ pii_count: appliedMasks.length, processing_time_ms: processingTime, method }), null);
 
     } catch (err) {
-        console.error('Processing error:', err);
+        console.error('Processing/Sanitization Error (Detailed):', err.message, err.stack);
         await dbPrepare(`UPDATE files SET status = 'failed', updated_at = CURRENT_TIMESTAMP WHERE id = ?`).run(fileId);
     }
 }
@@ -158,12 +158,12 @@ router.get('/', authenticateToken, async (req, res) => {
         let countQuery = 'SELECT COUNT(*) as total FROM files';
         const countParams = [];
         const countConditions = [];
-        
+
         if (req.user.role !== 'admin') { countConditions.push('uploaded_by = ?'); countParams.push(req.user.id); }
         if (status) { countConditions.push('status = ?'); countParams.push(status); }
-        
+
         if (countConditions.length > 0) countQuery += ' WHERE ' + countConditions.join(' AND ');
-        
+
         const countResult = await dbPrepare(countQuery).get(...countParams);
         const total = countResult ? countResult.total : 0;
 
@@ -185,7 +185,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
     `).get(req.params.id);
 
         if (!file) return res.status(404).json({ error: 'File not found' });
-        
+
         if (req.user.role !== 'admin' && file.uploaded_by !== req.user.id) {
             return res.status(403).json({ error: 'Access denied' });
         }

@@ -62,7 +62,12 @@ export default function FileUploadPage() {
             }, 1500);
 
         } catch (err) {
-            toast.error(err.response?.data?.error || 'Upload failed');
+            console.error(err);
+            if (err.message === 'Network Error') {
+                toast.error('Connection failed. Is the backend API running at the correct REACT_APP_API_URL?');
+            } else {
+                toast.error(err.response?.data?.error || err.response?.data?.details || 'File processing failed. Please try again.');
+            }
             setUploading(false);
         }
     };
