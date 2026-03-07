@@ -88,7 +88,7 @@ export default function FilesListPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {isAdmin ? 'All Files' : 'Sanitized Files'}
+                        {isAdmin ? 'All Files' : 'My Files'}
                     </h1>
                     <p className={`text-sm mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                         {total} files found

@@ -41,8 +41,8 @@ const upload = multer({
     }
 });
 
-// POST /api/files/upload - Admin only
-router.post('/upload', authenticateToken, requireRole('admin'), upload.single('file'), async (req, res) => {
+// POST /api/files/upload - Any authenticated user
+router.post('/upload', authenticateToken, upload.single('file'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
@@ -145,6 +145,7 @@ router.get('/', authenticateToken, async (req, res) => {
         const params = [];
         const conditions = [];
 
+        if (req.user.role !== 'admin') { conditions.push('f.uploaded_by = ?'); params.push(req.user.id); }
         if (status) { conditions.push('f.status = ?'); params.push(status); }
         if (search) { conditions.push('f.original_name LIKE ?'); params.push(`%${search}%`); }
         if (conditions.length > 0) query += ' WHERE ' + conditions.join(' AND ');
@@ -156,7 +157,13 @@ router.get('/', authenticateToken, async (req, res) => {
 
         let countQuery = 'SELECT COUNT(*) as total FROM files';
         const countParams = [];
-        if (status) { countQuery += ' WHERE status = ?'; countParams.push(status); }
+        const countConditions = [];
+        
+        if (req.user.role !== 'admin') { countConditions.push('uploaded_by = ?'); countParams.push(req.user.id); }
+        if (status) { countConditions.push('status = ?'); countParams.push(status); }
+        
+        if (countConditions.length > 0) countQuery += ' WHERE ' + countConditions.join(' AND ');
+        
         const countResult = await dbPrepare(countQuery).get(...countParams);
         const total = countResult ? countResult.total : 0;
 
@@ -178,6 +185,10 @@ router.get('/:id', authenticateToken, async (req, res) => {
     `).get(req.params.id);
 
         if (!file) return res.status(404).json({ error: 'File not found' });
+        
+        if (req.user.role !== 'admin' && file.uploaded_by !== req.user.id) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
 
         if (req.user.role !== 'admin') {
             delete file.original_text;
@@ -206,6 +217,9 @@ router.get('/:id/download', authenticateToken, async (req, res) => {
         const file = await dbPrepare('SELECT * FROM files WHERE id = ?').get(req.params.id);
 
         if (!file) return res.status(404).json({ error: 'File not found' });
+        if (req.user.role !== 'admin' && file.uploaded_by !== req.user.id) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
         if (file.status !== 'completed') return res.status(400).json({ error: 'File not yet processed' });
 
         const downloadPath = file.sanitized_path;

@@ -9,12 +9,12 @@ router.get('/', authenticateToken, async (req, res) => {
   try {
     await getDb();
 
-    const totalFiles = (await dbPrepare('SELECT COUNT(*) as count FROM files').get() || {}).count || 0;
-    const completedFiles = (await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'completed'").get() || {}).count || 0;
-    const processingFiles = (await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'processing'").get() || {}).count || 0;
-    const failedFiles = (await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'failed'").get() || {}).count || 0;
-    const totalPii = (await dbPrepare('SELECT COUNT(*) as count FROM pii_detections').get() || {}).count || 0;
-    const totalUsers = (await dbPrepare('SELECT COUNT(*) as count FROM users').get() || {}).count || 0;
+    const totalFiles = ((await dbPrepare('SELECT COUNT(*) as count FROM files').get()) || {}).count || 0;
+    const completedFiles = ((await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'completed'").get()) || {}).count || 0;
+    const processingFiles = ((await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'processing'").get()) || {}).count || 0;
+    const failedFiles = ((await dbPrepare("SELECT COUNT(*) as count FROM files WHERE status = 'failed'").get()) || {}).count || 0;
+    const totalPii = ((await dbPrepare('SELECT COUNT(*) as count FROM pii_detections').get()) || {}).count || 0;
+    const totalUsers = ((await dbPrepare('SELECT COUNT(*) as count FROM users').get()) || {}).count || 0;
 
     const piiByType = await dbPrepare(`
       SELECT pii_type, COUNT(*) as count 

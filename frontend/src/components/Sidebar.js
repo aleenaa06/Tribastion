@@ -22,7 +22,8 @@ export default function Sidebar() {
 
     const userLinks = [
         { to: '/dashboard', icon: HiViewGrid, label: 'Dashboard', end: true },
-        { to: '/dashboard/files', icon: HiDocumentText, label: 'Sanitized Files' },
+        { to: '/dashboard/upload', icon: HiUpload, label: 'Upload Files' },
+        { to: '/dashboard/files', icon: HiDocumentText, label: 'My Files' },
         { to: '/dashboard/stats', icon: HiChartBar, label: 'Analytics' },
     ];
 

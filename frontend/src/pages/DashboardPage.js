@@ -116,12 +116,10 @@ export default function DashboardPage() {
                         {isAdmin ? 'Root Access Granted // Global Overview Active' : 'User Access Granted // Personal Secure Sector'}
                     </p>
 
-                    {isAdmin && (
-                        <Link to="/dashboard/upload" className="mt-6 inline-flex px-6 py-3 text-sm font-bold text-slate-900 bg-cyan-400 hover:bg-cyan-300 rounded-xl transition-all shadow-[0_0_15px_rgba(6,182,212,0.5)] items-center space-x-2 uppercase font-mono tracking-wider">
-                            <HiUpload className="w-5 h-5" />
-                            <span>Initiate File Upload</span>
-                        </Link>
-                    )}
+                <Link to="/dashboard/upload" className="mt-6 inline-flex px-6 py-3 text-sm font-bold text-slate-900 bg-cyan-400 hover:bg-cyan-300 rounded-xl transition-all shadow-[0_0_15px_rgba(6,182,212,0.5)] items-center space-x-2 uppercase font-mono tracking-wider">
+                    <HiUpload className="w-5 h-5" />
+                    <span>Initiate File Upload</span>
+                </Link>
                 </div>
             </div>
 
@@ -228,11 +226,9 @@ export default function DashboardPage() {
                     <div className="text-center py-12 text-cyan-500/50 font-mono relative z-10">
                         <HiExclamationCircle className="w-16 h-16 mx-auto mb-4 opacity-30 animate-pulse" />
                         <p className="text-base uppercase tracking-widest">Awaiting First Upload Sequence</p>
-                        {isAdmin && (
-                            <Link to="/dashboard/upload" className="inline-flex items-center mt-6 px-6 py-2 text-sm text-cyan-950 bg-cyan-500/80 hover:bg-cyan-400 font-bold rounded-lg transition-colors border border-cyan-300">
-                                <HiUpload className="w-4 h-4 mr-2" /> Initialize System
-                            </Link>
-                        )}
+                        <Link to="/dashboard/upload" className="inline-flex items-center mt-6 px-6 py-2 text-sm text-cyan-950 bg-cyan-500/80 hover:bg-cyan-400 font-bold rounded-lg transition-colors border border-cyan-300">
+                            <HiUpload className="w-4 h-4 mr-2" /> Initialize System
+                        </Link>
                     </div>
                 )}
             </div>
