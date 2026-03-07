@@ -200,6 +200,45 @@ export default function LandingPage() {
                 </div>
             </section>
 
+            {/* 4.5 INTERACTIVE DEMO CTA SECTION */}
+            <section id="demo" className="py-32 px-4 relative overflow-hidden bg-[#020617]">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-cyan-900/20"></div>
+
+                {/* Visual grid lines */}
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#06b6d4 1px, transparent 1px), linear-gradient(90deg, #06b6d4 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
+
+                {/* Glowing Orbs */}
+                <div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px]"></div>
+                <div className="absolute top-1/2 right-1/4 translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px]"></div>
+
+                <div className="max-w-4xl mx-auto text-center relative z-10">
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
+                        className="p-12 md:p-16 rounded-3xl bg-[#0F172A]/80 backdrop-blur-xl border border-cyan-500/30 shadow-[0_0_50px_rgba(6,182,212,0.15)] relative overflow-hidden group"
+                    >
+                        {/* Animated border line */}
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
+
+                        <div className="w-20 h-20 mx-auto bg-cyan-950 rounded-2xl flex items-center justify-center border border-cyan-500/50 mb-8 shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+                            <HiOutlineColorSwatch className="w-10 h-10 text-cyan-400" />
+                        </div>
+
+                        <h2 className="text-4xl md:text-5xl font-black mb-6 text-cyan-50 tracking-tight drop-shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+                            Experience the <span className="text-cyan-400">Live Demo</span>
+                        </h2>
+
+                        <p className="text-lg text-cyan-200/70 mb-10 max-w-2xl mx-auto leading-relaxed">
+                            Upload a sample file and watch our AI instantly detect and redact personal information. No credit card required. Total data privacy guaranteed.
+                        </p>
+
+                        <Link to="/login" className="inline-flex items-center space-x-3 px-10 py-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 rounded-xl text-lg font-black tracking-widest uppercase text-white shadow-[0_0_30px_rgba(6,182,212,0.5)] hover:shadow-[0_0_40px_rgba(6,182,212,0.7)] hover:-translate-y-1 transition-all">
+                            <span>Launch Live Sandbox</span>
+                            <HiOutlineShieldExclamation className="w-6 h-6" />
+                        </Link>
+                    </motion.div>
+                </div>
+            </section>
+
             {/* 5. FOOTER */}
             <footer className="relative pt-16 pb-8 px-4 bg-[#020617] border-t border-cyan-500/30 overflow-hidden">
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent shadow-[0_0_20px_#22d3ee]"></div>
