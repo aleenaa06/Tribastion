@@ -1,247 +1,244 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { motion } from 'framer-motion';
 import {
-    HiShieldCheck, HiLockClosed, HiDocumentSearch, HiEye,
-    HiCloudUpload, HiDatabase, HiChartBar, HiCode,
-    HiArrowRight, HiCheckCircle
+    HiShieldCheck, HiLockClosed, HiDocumentSearch,
+    HiCloudUpload, HiDatabase, HiCode,
+    HiArrowRight, HiOutlineShieldExclamation,
+    HiOutlineClipboardCheck, HiOutlineDownload,
+    HiOutlineColorSwatch, HiOutlineTag
 } from 'react-icons/hi';
+import CyberGlobe from '../components/CyberGlobe';
 
 export default function LandingPage() {
-    const { darkMode } = useTheme();
     const { user } = useAuth();
 
     const features = [
-        { icon: HiDocumentSearch, title: 'Smart PII Detection', desc: 'Automatically detect names, emails, phone numbers, PAN, Aadhaar, IPs and more using Regex + NLP.', color: 'from-blue-500 to-blue-600' },
-        { icon: HiShieldCheck, title: 'Data Sanitization', desc: 'Mask, redact, or tokenize sensitive information with multiple sanitization methods.', color: 'from-cyan-500 to-teal-500' },
-        { icon: HiCloudUpload, title: 'Multi-Format Support', desc: 'Upload PDF, DOCX, CSV, JSON, SQL, TXT, JPG, PNG files for seamless processing.', color: 'from-purple-500 to-indigo-500' },
-        { icon: HiLockClosed, title: 'Role-Based Access', desc: 'Admins manage uploads & view raw data. Standard users only see sanitized outputs.', color: 'from-rose-500 to-pink-500' },
-        { icon: HiDatabase, title: 'Audit Logging', desc: 'Complete audit trail of all uploads, downloads, accesses, and PII detection events.', color: 'from-amber-500 to-orange-500' },
-        { icon: HiChartBar, title: 'Analytics Dashboard', desc: 'Interactive charts showing files processed, PII detections, and sanitization statistics.', color: 'from-emerald-500 to-green-500' },
+        { icon: HiDocumentSearch, title: 'PII Detection', desc: 'Enterprise-grade NLP and Regex to instantly identify names, emails, IPs, cards, and more.' },
+        { icon: HiOutlineColorSwatch, title: 'Redaction Engine', desc: 'Draw persistent black bars over sensitive data across PDF layers and document text.' },
+        { icon: HiOutlineShieldExclamation, title: 'Masking Engine', desc: 'Intelligently obfuscate partial strings (e.g. XXXX-XXXX-1234) while preserving format.' },
+        { icon: HiOutlineTag, title: 'Tokenization System', desc: 'Replace real data with mathematically consistent tokens (<NAME_1>) for analytics.' },
+        { icon: HiCloudUpload, title: 'Multi Format Support', desc: 'Securely process CSV, JSON, PDF, DOCX, TXT, and Images in a single seamless pipeline.' },
+        { icon: HiDatabase, title: 'Audit Logging', desc: 'Immutable trail of exact sanitization events, maintaining rigid compliance standards.' },
     ];
 
-    const steps = [
-        { step: '01', title: 'Upload File', desc: 'Admin uploads a file containing sensitive data through the drag-and-drop interface.' },
-        { step: '02', title: 'PII Detection', desc: 'Our engine scans the file using Regex patterns and NLP Named Entity Recognition.' },
-        { step: '03', title: 'Sanitization', desc: 'Detected PII is masked, redacted, or tokenized based on your chosen method.' },
-        { step: '04', title: 'Secure Access', desc: 'Only sanitized versions are accessible to standard users. Originals stay protected.' },
+    const benefits = [
+        { title: 'Protect Sensitive Data', desc: 'Prevent catastrophic data exposures before they leave your internal network.', icon: HiShieldCheck },
+        { title: 'Automate Compliance', desc: 'Meet GDPR, HIPAA, and CCPA standards automatically upon file ingestion.', icon: HiOutlineClipboardCheck },
+        { title: 'Prevent Data Leaks', desc: 'Lock down unstructured text assets seamlessly with AI-driven blinders.', icon: HiLockClosed },
+        { title: 'Secure Document Sharing', desc: 'Safely distribute sanitized datasets to third parties and analysts.', icon: HiOutlineDownload },
     ];
 
-    const demoInput = `My name is Rahul Sharma and my Aadhaar number is 1234-5678-9012. 
-Contact me at rahul.sharma@email.com or +91-98765-43210.
-My PAN is ABCPD1234E.`;
+    const fadeInUp = {
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    };
 
-    const demoOutput = `My name is [REDACTED_NAME] and my Aadhaar number is [REDACTED_AADHAAR]. 
-Contact me at [REDACTED_EMAIL] or [REDACTED_PHONE].
-My PAN is [REDACTED_PAN].`;
+    const staggerContainer = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    };
 
     return (
-        <div className={`min-h-screen ${darkMode ? 'bg-dark-950 text-white' : 'bg-gray-50 text-gray-900'}`}>
-            {/* Hero */}
-            <section className="relative pt-32 pb-20 px-4 overflow-hidden">
-                {/* Background effects */}
-                <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-                    <div className="absolute top-1/3 -right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
+        <div className="min-h-screen bg-transparent text-cyan-50 font-mono pb-0 relative overflow-x-hidden">
+            {/* 1. HERO SECTION */}
+            <section className="relative pt-32 pb-20 px-4 min-h-[90vh] flex items-center justify-center">
+                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+                    <motion.div
+                        initial="hidden" animate="visible" variants={staggerContainer}
+                        className="text-left"
+                    >
+                        <motion.div variants={fadeInUp} className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-900/20 text-cyan-400 mb-6 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                            <HiShieldCheck className="w-5 h-5 animate-pulse" />
+                            <span className="text-sm font-bold tracking-widest uppercase">System Initialization Complete</span>
+                        </motion.div>
+
+                        <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl font-black leading-tight mb-6 drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                            AI Powered <br />
+                            <span className="text-cyan-400">PII Protection</span> <br />
+                            Platform
+                        </motion.h1>
+
+                        <motion.p variants={fadeInUp} className="text-lg md:text-xl mb-10 text-cyan-100/70 max-w-xl leading-relaxed">
+                            Automatically detect, mask, and tokenize sensitive information from documents. Secure your enterprise data pipeline with military-grade precision.
+                        </motion.p>
+
+                        <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center gap-6">
+                            <Link to={user ? '/dashboard/upload' : '/login'} className="w-full sm:w-auto px-8 py-4 text-center font-black uppercase tracking-widest text-[#020617] bg-cyan-400 hover:bg-cyan-300 rounded-xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.6)] hover:shadow-[0_0_35px_rgba(6,182,212,0.8)] hover:-translate-y-1 relative group overflow-hidden">
+                                <span className="relative z-10">Upload Document</span>
+                                <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                            </Link>
+                            <a href="#features" className="w-full sm:w-auto px-8 py-4 text-center font-bold uppercase tracking-widest rounded-xl border-2 border-cyan-500/50 text-cyan-300 hover:bg-cyan-900/30 hover:border-cyan-400 transition-all shadow-[0_0_15px_rgba(6,182,212,0.1)] hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+                                View Features
+                            </a>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Cyber Security Visual */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="relative h-[400px] lg:h-[600px] w-full flex items-center justify-center -mr-10"
+                    >
+                        <div className="absolute inset-0 bg-cyan-500/5 rounded-full blur-[100px] animate-pulse"></div>
+                        <CyberGlobe />
+                    </motion.div>
                 </div>
+            </section>
+
+            {/* 2. FEATURES SECTION */}
+            <section id="features" className="py-24 px-4 bg-[#060c21]/80 backdrop-blur-md relative border-t border-cyan-900/50 shadow-[0_-10px_30px_rgba(6,182,212,0.05)]">
+                <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'linear-gradient(to right, #06b6d4 1px, transparent 1px), linear-gradient(to bottom, #06b6d4 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="text-center max-w-4xl mx-auto">
-                        <div className={`inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border mb-8 ${darkMode ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-400' : 'border-blue-200 bg-blue-50 text-blue-700'}`}>
-                            <HiShieldCheck className="w-4 h-4" />
-                            <span className="text-sm font-medium">Enterprise-Grade PII Protection</span>
-                        </div>
-
-                        <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6">
-                            Detect & Sanitize{' '}
-                            <span className="gradient-text">Personal Data</span>{' '}
-                            Automatically
-                        </h1>
-
-                        <p className={`text-lg md:text-xl mb-10 max-w-2xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Upload any file — CSV, PDF, DOCX, images and more. Our AI-powered engine detects PII like names, Aadhaar numbers, PAN cards, emails, and sanitizes them instantly.
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <Link to={user ? '/dashboard' : '/login'} className="px-8 py-4 text-lg font-bold text-white rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 transition-all shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 flex items-center space-x-2 group">
-                                <span>{user ? 'Go to Dashboard' : 'Start Protecting Data'}</span>
-                                <HiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                            <a href="#demo" className={`px-8 py-4 text-lg font-semibold rounded-2xl border-2 ${darkMode ? 'border-white/20 text-gray-300 hover:bg-white/5' : 'border-gray-300 text-gray-700 hover:bg-gray-100'} transition-all`}>
-                                See Demo
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 max-w-3xl mx-auto">
-                        {[
-                            { label: 'File Formats', value: '8+' },
-                            { label: 'PII Types', value: '7+' },
-                            { label: 'Detection Methods', value: '3' },
-                            { label: 'Sanitization Modes', value: '3' },
-                        ].map((stat, i) => (
-                            <div key={i} className={`text-center p-4 rounded-2xl ${darkMode ? 'bg-white/5 border border-white/5' : 'bg-white border border-gray-100 shadow-sm'}`}>
-                                <div className="text-3xl font-black gradient-text">{stat.value}</div>
-                                <div className={`text-sm mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>{stat.label}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Features */}
-            <section id="features" className="py-20 px-4">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-black mb-4">
-                            Powerful <span className="gradient-text">Security Features</span>
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+                        className="text-center mb-16"
+                    >
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
+                            Core <span className="text-cyan-400">Architecture</span>
                         </h2>
-                        <p className={`text-lg max-w-2xl mx-auto ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Everything you need to detect, sanitize, and manage sensitive personal data.
+                        <p className="text-lg max-w-2xl mx-auto text-cyan-200/60 uppercase tracking-widest">
+                            Advanced modules for comprehensive data sanitization.
                         </p>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {features.map((feature, i) => (
-                            <div key={i} className={`group p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 ${darkMode ? 'bg-white/[0.03] border border-white/5 hover:border-white/10 hover:bg-white/[0.05]' : 'bg-white border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-md'}`}>
-                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                                    <feature.icon className="w-6 h-6 text-white" />
+                            <motion.div
+                                key={i}
+                                initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
+                                variants={{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { delay: i * 0.1 } } }}
+                                className="group p-8 rounded-2xl bg-[#0F172A]/80 backdrop-blur-sm border border-cyan-500/10 hover:border-cyan-400/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(6,182,212,0.15)] relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-bl-[100px] transition-all group-hover:bg-cyan-500/20 group-hover:scale-110"></div>
+                                <div className="w-14 h-14 rounded-xl bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(6,182,212,0.2)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-shadow">
+                                    <feature.icon className="w-7 h-7 text-cyan-400" />
                                 </div>
-                                <h3 className={`text-lg font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{feature.title}</h3>
-                                <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{feature.desc}</p>
-                            </div>
+                                <h3 className="text-xl font-bold mb-3 text-cyan-100 tracking-wide">{feature.title}</h3>
+                                <p className="text-sm leading-relaxed text-cyan-300/60">{feature.desc}</p>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* How It Works */}
-            <section id="how-it-works" className={`py-20 px-4 ${darkMode ? 'bg-white/[0.02]' : 'bg-white'}`}>
+            {/* 3. HOW IT WORKS SECTION */}
+            <section id="how-it-works" className="py-24 px-4 relative">
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
+                        className="text-center mb-20"
+                    >
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
+                            Execution <span className="text-cyan-400">Flow</span>
+                        </h2>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-4 gap-8 relative">
+                        {/* Connecting line for desktop */}
+                        <div className="hidden md:block absolute top-[60px] left-[10%] right-[10%] h-0.5 bg-cyan-900/50">
+                            <div className="absolute top-0 left-0 h-full bg-cyan-400 w-1/4 animate-[slideRight_3s_ease-in-out_infinite]"></div>
+                        </div>
+
+                        {[
+                            { step: '01', title: 'Upload Document', desc: 'Securely transfer raw files via encrypted drag-and-drop protocols.', icon: HiCloudUpload },
+                            { step: '02', title: 'Detect Sensitive Data', desc: 'Neural engines scan and isolate personal identifiers natively.', icon: HiDocumentSearch },
+                            { step: '03', title: 'Choose Method', desc: 'Specify Redaction, Masking, or Tokenization logic for the payload.', icon: HiOutlineColorSwatch },
+                            { step: '04', title: 'Download Secure File', desc: 'Retrieve the mathematically sanitized, format-preserved output.', icon: HiOutlineDownload },
+                        ].map((s, i) => (
+                            <motion.div
+                                key={i}
+                                initial="hidden" whileInView="visible" viewport={{ once: true }}
+                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { delay: i * 0.2 } } }}
+                                className="relative text-center group"
+                            >
+                                <div className="w-32 h-32 mx-auto rounded-full bg-[#0F172A] border-2 border-cyan-800 flex items-center justify-center mb-8 relative group-hover:border-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.05)] group-hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                                    <h1 className="absolute -top-4 -right-2 text-6xl font-black text-cyan-900/30 group-hover:text-cyan-800/50 transition-colors pointer-events-none">{s.step}</h1>
+                                    <s.icon className="w-12 h-12 text-cyan-500 group-hover:text-cyan-300 transition-colors" />
+                                </div>
+                                <h3 className="text-lg font-bold mb-3 text-cyan-100 uppercase tracking-widest">{s.title}</h3>
+                                <p className="text-sm text-cyan-300/60 leading-relaxed max-w-[250px] mx-auto">{s.desc}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 4. PLATFORM BENEFITS SECTION */}
+            <section className="py-24 px-4 bg-[#060c21]/80 backdrop-blur-md relative border-t border-cyan-900/50">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-black mb-4">
-                            How It <span className="gradient-text">Works</span>
+                    <motion.div
+                        initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
+                        className="text-center mb-16"
+                    >
+                        <h2 className="text-3xl md:text-5xl font-black mb-4 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
+                            System <span className="text-cyan-400">Benefits</span>
                         </h2>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid md:grid-cols-4 gap-8">
-                        {steps.map((s, i) => (
-                            <div key={i} className="relative text-center">
-                                <div className={`text-6xl font-black mb-4 ${darkMode ? 'text-white/5' : 'text-gray-100'}`}>{s.step}</div>
-                                <h3 className={`text-lg font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{s.title}</h3>
-                                <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>{s.desc}</p>
-                                {i < 3 && <div className={`hidden md:block absolute top-8 -right-4 w-8 text-2xl ${darkMode ? 'text-gray-700' : 'text-gray-300'}`}>→</div>}
-                            </div>
+                    <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                        {benefits.map((b, i) => (
+                            <motion.div
+                                key={i}
+                                initial="hidden" whileInView="visible" viewport={{ once: true }}
+                                variants={fadeInUp}
+                                className="flex items-start space-x-6 p-8 rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#020617] border border-cyan-500/20 hover:border-cyan-400/60 transition-all shadow-[0_0_15px_rgba(6,182,212,0.05)] hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] group"
+                            >
+                                <div className="p-4 rounded-xl bg-cyan-950 border border-cyan-800 group-hover:bg-cyan-900/80 transition-colors shrink-0">
+                                    <b.icon className="w-8 h-8 text-cyan-400" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-cyan-50 mb-2 uppercase tracking-wide">{b.title}</h3>
+                                    <p className="text-cyan-200/60 leading-relaxed text-sm">{b.desc}</p>
+                                </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Demo */}
-            <section id="demo" className="py-20 px-4">
-                <div className="max-w-5xl mx-auto">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-5xl font-black mb-4">
-                            Live <span className="gradient-text">Demo</span>
-                        </h2>
-                        <p className={`text-lg ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            See how PII detection and sanitization works in real-time.
-                        </p>
-                    </div>
+            {/* 5. FOOTER */}
+            <footer className="relative pt-16 pb-8 px-4 bg-[#020617] border-t border-cyan-500/30 overflow-hidden">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent shadow-[0_0_20px_#22d3ee]"></div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className={`p-6 rounded-2xl ${darkMode ? 'bg-red-500/5 border border-red-500/20' : 'bg-red-50 border border-red-200'}`}>
-                            <div className="flex items-center space-x-2 mb-4">
-                                <HiEye className="w-5 h-5 text-red-400" />
-                                <h3 className="font-bold text-red-400">Original (Contains PII)</h3>
-                            </div>
-                            <pre className={`text-sm leading-relaxed whitespace-pre-wrap font-mono ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                {demoInput}
-                            </pre>
-                        </div>
-
-                        <div className={`p-6 rounded-2xl ${darkMode ? 'bg-green-500/5 border border-green-500/20' : 'bg-green-50 border border-green-200'}`}>
-                            <div className="flex items-center space-x-2 mb-4">
-                                <HiCheckCircle className="w-5 h-5 text-green-400" />
-                                <h3 className="font-bold text-green-400">Sanitized (PII Removed)</h3>
-                            </div>
-                            <pre className={`text-sm leading-relaxed whitespace-pre-wrap font-mono ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                {demoOutput}
-                            </pre>
-                        </div>
-                    </div>
-
-                    <div className="text-center mt-8">
-                        <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                            Detected: <span className="text-cyan-400 font-semibold">5 PII items</span> — Name, Aadhaar, Email, Phone, PAN
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* Supported Formats */}
-            <section className={`py-20 px-4 ${darkMode ? 'bg-white/[0.02]' : 'bg-white'}`}>
-                <div className="max-w-5xl mx-auto text-center">
-                    <h2 className="text-3xl md:text-4xl font-black mb-8">
-                        Supported <span className="gradient-text">File Formats</span>
-                    </h2>
-                    <div className="flex flex-wrap justify-center gap-3">
-                        {['PDF', 'DOCX', 'CSV', 'JSON', 'SQL', 'TXT', 'JPG', 'PNG'].map(fmt => (
-                            <div key={fmt} className={`px-5 py-3 rounded-xl font-mono font-bold text-sm ${darkMode ? 'bg-white/5 border border-white/10 text-cyan-400' : 'bg-gray-100 border border-gray-200 text-blue-600'}`}>
-                                .{fmt.toLowerCase()}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA */}
-            <section className="py-20 px-4">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className={`p-12 rounded-3xl ${darkMode ? 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-white/5' : 'bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100'}`}>
-                        <h2 className="text-3xl md:text-4xl font-black mb-4">
-                            Ready to Secure Your Data?
-                        </h2>
-                        <p className={`text-lg mb-8 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Start detecting and sanitizing PII from your files today.
-                        </p>
-                        <Link to={user ? '/dashboard' : '/login'} className="inline-flex items-center px-8 py-4 text-lg font-bold text-white rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 transition-all shadow-2xl shadow-blue-500/25 group">
-                            <span>{user ? 'Open Dashboard' : 'Get Started Free'}</span>
-                            <HiArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10 mb-12 relative z-10">
+                    <div className="md:col-span-2">
+                        <Link to="/" className="flex items-center space-x-2 group mb-6">
+                            <HiShieldCheck className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                            <span className="text-2xl font-black tracking-widest text-cyan-50">
+                                TRI<span className="text-cyan-400">BASTION</span>
+                            </span>
                         </Link>
+                        <p className="text-sm text-cyan-400/50 max-w-sm leading-relaxed">
+                            Fortifying digital perimeters with automated, AI-driven PII redaction and format-preserving sanitization algorithms.
+                        </p>
+                    </div>
 
-                        <div className="mt-8 flex flex-wrap justify-center gap-6">
-                            <div className="flex items-center space-x-2">
-                                <HiCheckCircle className="w-5 h-5 text-green-400" />
-                                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>No credit card required</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <HiCheckCircle className="w-5 h-5 text-green-400" />
-                                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>RBAC built-in</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <HiCheckCircle className="w-5 h-5 text-green-400" />
-                                <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Full audit logs</span>
-                            </div>
-                        </div>
+                    <div>
+                        <h4 className="font-bold text-cyan-200 mb-6 uppercase tracking-widest text-sm">Navigation</h4>
+                        <ul className="space-y-4 text-sm text-cyan-400/60">
+                            <li><a href="#features" className="hover:text-cyan-300 transition-colors">Core Architecture</a></li>
+                            <li><a href="#how-it-works" className="hover:text-cyan-300 transition-colors">Execution Flow</a></li>
+                            <li><Link to="/login" className="hover:text-cyan-300 transition-colors">System Access</Link></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="font-bold text-cyan-200 mb-6 uppercase tracking-widest text-sm">System Links</h4>
+                        <ul className="space-y-4 text-sm text-cyan-400/60">
+                            <li><a href="https://github.com/aleenaa06/Tribastion" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-300 transition-colors flex items-center space-x-2"><HiCode className="w-4 h-4" /> <span>Source Code</span></a></li>
+                            <li><span className="hover:text-cyan-300 transition-colors cursor-pointer border-b border-cyan-800 border-dashed">Contact Dispatch</span></li>
+                        </ul>
                     </div>
                 </div>
-            </section>
 
-            {/* Footer */}
-            <footer className={`py-8 px-4 border-t ${darkMode ? 'border-white/5 text-gray-600' : 'border-gray-200 text-gray-400'}`}>
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-                    <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                        <HiShieldCheck className="w-5 h-5 text-cyan-500" />
-                        <span className="font-bold">Tribastion</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm">
-                        <HiCode className="w-4 h-4" />
-                        <span>Built for Hackathon 2026</span>
-                    </div>
+                <div className="max-w-7xl mx-auto text-center border-t border-cyan-900/50 pt-8 relative z-10">
+                    <p className="text-xs text-cyan-500/40 uppercase tracking-widest">
+                        © 2026 Tribastion Security Systems. All strict protocols enforced.
+                    </p>
                 </div>
             </footer>
         </div>

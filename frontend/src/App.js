@@ -14,6 +14,7 @@ import FileDetailPage from './pages/FileDetailPage';
 import UsersPage from './pages/UsersPage';
 import AuditLogsPage from './pages/AuditLogsPage';
 import StatsPage from './pages/StatsPage';
+import CyberBackground from './components/CyberBackground';
 
 function AdminRoute({ children }) {
   const { user, loading } = useAuth();
@@ -27,7 +28,8 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <div className="min-h-screen">
+          <CyberBackground />
+          <div className="min-h-screen text-cyan-300">
             <Navbar />
             <Toaster
               position="top-right"

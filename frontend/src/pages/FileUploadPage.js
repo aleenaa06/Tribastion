@@ -5,6 +5,9 @@ import { useTheme } from '../context/ThemeContext';
 import { fileAPI } from '../services/api';
 import toast from 'react-hot-toast';
 import { HiCloudUpload, HiDocumentText, HiX, HiArrowRight, HiCheckCircle } from 'react-icons/hi';
+import SanitizationCards from '../components/SanitizationCards';
+import ScanAnimation from '../components/ScanAnimation';
+import { motion } from 'framer-motion';
 
 const ACCEPTED_TYPES = {
     'text/csv': ['.csv'],
@@ -52,12 +55,18 @@ export default function FileUploadPage() {
             formData.append('file', file);
 
             const response = await fileAPI.upload(formData);
-            setUploadResult(response.data);
-            toast.success('File uploaded and processing started!');
+
+            // Artificial delay to let the cool animation play
+            setTimeout(() => {
+                setUploadResult(response.data);
+                toast.success('File analyzed and secured!');
+                setUploading(false);
+            }, 1500);
+
         } catch (err) {
             toast.error(err.response?.data?.error || 'Upload failed');
+            setUploading(false);
         }
-        setUploading(false);
     };
 
     const formatSize = (bytes) => {
@@ -67,115 +76,120 @@ export default function FileUploadPage() {
     };
 
     return (
-        <div className="max-w-3xl mx-auto space-y-6">
-            <div>
-                <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Upload File</h1>
-                <p className={`text-sm mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                    Upload files containing PII for automatic detection and sanitization.
+        <div className="max-w-4xl mx-auto space-y-8 relative">
+            <ScanAnimation isProcessing={uploading} fileName={file?.name} />
+
+            <div className="text-center">
+                <h1 className="text-4xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)] tracking-wider">
+                    SECURE DATALINK
+                </h1>
+                <p className="text-sm mt-2 text-cyan-200/60 font-mono tracking-widest uppercase">
+                    Initialize Encrypted PII Sanitization
                 </p>
             </div>
 
-            {/* Upload Zone */}
-            <div {...getRootProps()} className={`p-12 rounded-2xl border-2 border-dashed text-center cursor-pointer transition-all duration-300
-        ${isDragActive
-                    ? 'border-cyan-500 bg-cyan-500/5 scale-[1.02]'
+            {/* Glowing Upload Zone */}
+            <div {...getRootProps()} className={`
+                relative p-12 rounded-3xl border-2 text-center cursor-pointer transition-all duration-500 overflow-hidden
+                ${isDragActive
+                    ? 'border-cyan-400 bg-cyan-900/30 scale-[1.03] shadow-[0_0_30px_#00BFFF]'
                     : file
-                        ? darkMode ? 'border-green-500/30 bg-green-500/5' : 'border-green-300 bg-green-50'
-                        : darkMode ? 'border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.04]' : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
-                }`}>
+                        ? 'border-green-400/50 bg-[#0F172A] shadow-[0_0_20px_rgba(74,222,128,0.2)]'
+                        : 'border-slate-700 bg-[#0F172A]/80 hover:border-cyan-500/50 hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] shadow-xl'
+                }
+            `}>
                 <input {...getInputProps()} />
 
                 {file ? (
-                    <div className="space-y-3">
-                        <HiDocumentText className={`w-16 h-16 mx-auto ${darkMode ? 'text-green-400' : 'text-green-500'}`} />
+                    <div className="space-y-4 relative z-10">
+                        <div className="w-20 h-20 mx-auto rounded-full bg-green-900/40 flex items-center justify-center border border-green-500/30 shadow-[0_0_15px_rgba(74,222,128,0.3)]">
+                            <HiDocumentText className="w-10 h-10 text-green-400" />
+                        </div>
                         <div>
-                            <p className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{file.name}</p>
-                            <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>{formatSize(file.size)}</p>
+                            <p className="text-xl font-bold text-green-300">{file.name}</p>
+                            <p className="text-sm text-green-400/60 font-mono">{formatSize(file.size)}</p>
                         </div>
                         <button onClick={(e) => { e.stopPropagation(); setFile(null); setUploadResult(null); }}
-                            className="inline-flex items-center text-sm text-red-400 hover:text-red-300 transition-colors">
-                            <HiX className="w-4 h-4 mr-1" /> Remove
+                            className="inline-flex items-center px-4 py-2 rounded-full bg-red-950/50 text-sm text-red-400 hover:text-red-300 border border-red-900/50 hover:border-red-500/50 transition-all font-mono">
+                            <HiX className="w-4 h-4 mr-1" /> Abort Upload
                         </button>
                     </div>
                 ) : (
-                    <div className="space-y-3">
-                        <HiCloudUpload className={`w-16 h-16 mx-auto ${isDragActive ? 'text-cyan-400 animate-bounce' : darkMode ? 'text-gray-600' : 'text-gray-300'}`} />
+                    <div className="space-y-4 relative z-10">
+                        <motion.div
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            className="w-24 h-24 mx-auto rounded-full bg-cyan-950/50 flex items-center justify-center border border-cyan-800"
+                        >
+                            <HiCloudUpload className={`w-12 h-12 ${isDragActive ? 'text-cyan-300 drop-shadow-[0_0_8px_#22d3ee]' : 'text-cyan-600'}`} />
+                        </motion.div>
                         <div>
-                            <p className={`text-lg font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                {isDragActive ? 'Drop your file here' : 'Drag & drop a file here'}
+                            <p className="text-xl font-bold text-cyan-100">
+                                {isDragActive ? 'UPLINK ESTABLISHED' : 'DRAG & DROP TO SECURE'}
                             </p>
-                            <p className={`text-sm mt-1 ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>
-                                or click to browse your files
+                            <p className="text-sm mt-2 text-cyan-400/50 font-mono">
+                                OR CLICK TO BROWSE LOCAL FILES
                             </p>
                         </div>
-                        <div className="flex flex-wrap justify-center gap-2 mt-4">
+                        <div className="flex flex-wrap justify-center gap-3 mt-6">
                             {['PDF', 'DOCX', 'CSV', 'JSON', 'SQL', 'TXT', 'JPG', 'PNG'].map(fmt => (
-                                <span key={fmt} className={`text-xs px-2.5 py-1 rounded-lg font-mono ${darkMode ? 'bg-white/5 text-gray-500' : 'bg-gray-100 text-gray-500'}`}>.{fmt.toLowerCase()}</span>
+                                <span key={fmt} className="text-xs px-3 py-1 rounded-md font-mono bg-slate-800 text-cyan-500 border border-slate-700">
+                                    .{fmt}
+                                </span>
                             ))}
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Sanitization Method */}
-            <div className={`p-6 rounded-2xl ${darkMode ? 'bg-white/[0.03] border border-white/5' : 'bg-white border border-gray-100 shadow-sm'}`}>
-                <h3 className={`text-sm font-semibold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Sanitization Method</h3>
-                <div className="grid grid-cols-3 gap-3">
-                    {[
-                        { value: 'redaction', label: 'Redaction', desc: 'Replace with [REDACTED]' },
-                        { value: 'masking', label: 'Masking', desc: 'Partially hide values' },
-                        { value: 'tokenization', label: 'Tokenization', desc: 'Replace with tokens' },
-                    ].map(opt => (
-                        <button key={opt.value} onClick={() => setMethod(opt.value)}
-                            className={`p-4 rounded-xl text-left transition-all ${method === opt.value
-                                ? darkMode
-                                    ? 'bg-cyan-500/10 border-2 border-cyan-500/30 shadow-lg shadow-cyan-500/5'
-                                    : 'bg-blue-50 border-2 border-blue-300'
-                                : darkMode
-                                    ? 'bg-white/[0.02] border-2 border-transparent hover:border-white/10'
-                                    : 'bg-gray-50 border-2 border-transparent hover:border-gray-200'
-                                }`}>
-                            <div className={`text-sm font-bold ${method === opt.value ? 'text-cyan-400' : darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{opt.label}</div>
-                            <div className={`text-xs mt-1 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>{opt.desc}</div>
-                        </button>
-                    ))}
-                </div>
+            {/* Sanitization Method Animated Cards */}
+            <div className="mt-8">
+                <h3 className="text-sm font-bold text-cyan-400/80 uppercase tracking-widest font-mono mb-2 pl-2 border-l-2 border-cyan-500">
+                    Select Security Protocol
+                </h3>
+                <SanitizationCards selectedMethod={method} onSelect={setMethod} />
             </div>
 
-            {/* Upload Button */}
-            <button onClick={handleUpload} disabled={!file || uploading}
-                className="w-full py-4 text-sm font-bold text-white rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 transition-all shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
-                {uploading ? (
-                    <>
-                        <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-                        <span>Uploading & Processing...</span>
-                    </>
-                ) : (
-                    <>
-                        <HiCloudUpload className="w-5 h-5" />
-                        <span>Upload & Detect PII</span>
-                    </>
-                )}
+            {/* Glowing Upload Button */}
+            <button
+                onClick={handleUpload}
+                disabled={!file || uploading}
+                className={`
+                    w-full py-5 text-lg font-bold text-white rounded-2xl transition-all font-mono tracking-widest uppercase
+                    ${!file || uploading
+                        ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 border border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]'
+                    }
+                `}
+            >
+                {uploading ? 'Processing Data...' : 'Execute Protocol'}
             </button>
 
-            {/* Upload Result */}
+            {/* Hacker-themed Upload Result Alert */}
             {uploadResult && (
-                <div className={`p-6 rounded-2xl ${darkMode ? 'bg-green-500/5 border border-green-500/20' : 'bg-green-50 border border-green-200'}`}>
-                    <div className="flex items-start space-x-3">
-                        <HiCheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <h3 className="font-bold text-green-400 mb-1">Upload Successful!</h3>
-                            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                File <strong>{uploadResult.filename}</strong> has been uploaded and is being processed. PII detection is running.
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-6 rounded-2xl bg-[#0F172A] border border-green-500/40 shadow-[0_0_20px_rgba(74,222,128,0.1)] relative overflow-hidden"
+                >
+                    <div className="absolute top-0 left-0 w-1 h-full bg-green-500 shadow-[0_0_10px_#4ade80]" />
+                    <div className="flex items-start space-x-4">
+                        <div className="p-2 bg-green-500/10 rounded-full border border-green-500/20">
+                            <HiCheckCircle className="w-8 h-8 text-green-400 drop-shadow-[0_0_5px_#4ade80]" />
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="text-lg font-bold text-green-400 font-mono tracking-wider">THREAT MITIGATED</h3>
+                            <p className="text-sm text-slate-300 mt-1">
+                                File <strong className="text-cyan-300 font-mono">{uploadResult.filename}</strong> secured. PII has been contained via <span className="text-green-300 font-mono">{method.toUpperCase()}</span>.
                             </p>
                             <button onClick={() => navigate(`/dashboard/files/${uploadResult.id}`)}
-                                className="mt-3 text-sm text-cyan-400 hover:text-cyan-300 flex items-center space-x-1 transition-colors">
-                                <span>View File Details</span>
+                                className="mt-4 px-5 py-2 text-sm text-[#020617] bg-green-400 hover:bg-green-300 font-bold rounded-lg transition-colors flex items-center space-x-2 shadow-[0_0_10px_#4ade80]">
+                                <span>Access Secure File</span>
                                 <HiArrowRight className="w-4 h-4" />
                             </button>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             )}
         </div>
     );

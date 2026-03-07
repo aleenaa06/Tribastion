@@ -1,0 +1,30 @@
+[
+  {
+    "id": "273fe63e-cca6-4220-968a-8b393ddcd0ca",
+    "original_name": "dummy.txt",
+    "status": "completed",
+    "sanitization_method": "tokenization",
+    "pii_count": 0
+  },
+  {
+    "id": "51ed6a74-2c60-4f74-a6a3-46b11ea0076e",
+    "original_name": "Candidate Fee recipt.pdf",
+    "status": "completed",
+    "sanitization_method": "redaction",
+    "pii_count": 0
+  },
+  {
+    "id": "e2cbf3c5-f89d-4cb6-bf01-96744dc60045",
+    "original_name": "Candidate Fee recipt.pdf",
+    "status": "completed",
+    "sanitization_method": "tokenization",
+    "pii_count": 0
+  },
+  {
+    "id": "0965158b-281d-4660-99b6-be8058e280b1",
+    "original_name": "Candidate Fee recipt.pdf",
+    "status": "completed",
+    "sanitization_method": "masking",
+    "pii_count": 0
+  }
+]
