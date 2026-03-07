@@ -95,14 +95,51 @@ async function processFile(fileId, filePath, mimeType, method, user) {
 
         await processAndSanitize(filePath, sanitizedPath, mimeType, method);
 
-        const appliedMasks = [];
-
-        // Extract text for frontend preview
+        // Extract text for frontend preview and PII counting
         let originalText = await parseFile(filePath, mimeType);
         let sanitizedText = await parseFile(sanitizedPath, mimeType);
 
         if (!originalText) originalText = "Preview not available.";
         if (!sanitizedText) sanitizedText = "Preview not available.";
+
+        // Query the PII detection service to get the actual count of PII entities
+        let piiCount = 0;
+        try {
+            const http = require('http');
+            const PII_SERVICE_URL = process.env.PII_SERVICE_URL || 'http://localhost:5001';
+            const textToAnalyze = originalText !== "Preview not available." ? originalText : '';
+            if (textToAnalyze && textToAnalyze.length > 0) {
+                const piiResult = await new Promise((resolve, reject) => {
+                    const postData = JSON.stringify({ text: textToAnalyze.substring(0, 50000) });
+                    const urlParsed = new URL(`${PII_SERVICE_URL}/detect`);
+                    const options = {
+                        hostname: urlParsed.hostname,
+                        port: urlParsed.port || 80,
+                        path: urlParsed.pathname,
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Content-Length': Buffer.byteLength(postData)
+                        }
+                    };
+                    const req = http.request(options, (res) => {
+                        let data = '';
+                        res.on('data', chunk => data += chunk);
+                        res.on('end', () => {
+                            try { resolve(JSON.parse(data)); }
+                            catch (e) { resolve({ total: 0 }); }
+                        });
+                    });
+                    req.on('error', () => resolve({ total: 0 }));
+                    req.setTimeout(10000, () => { req.destroy(); resolve({ total: 0 }); });
+                    req.write(postData);
+                    req.end();
+                });
+                piiCount = piiResult.total || 0;
+            }
+        } catch (piiErr) {
+            console.warn('PII count query failed, defaulting to 0:', piiErr.message);
+        }
 
         const processingTime = Date.now() - startTime;
 
@@ -116,10 +153,10 @@ async function processFile(fileId, filePath, mimeType, method, user) {
         processing_time_ms = ?,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `).run(sanitizedPath, originalText, sanitizedText, appliedMasks.length, processingTime, fileId);
+    `).run(sanitizedPath, originalText, sanitizedText, piiCount, processingTime, fileId);
 
         logAudit(user.id, user.username, 'PII_DETECTION', 'file', fileId,
-            JSON.stringify({ pii_count: appliedMasks.length, processing_time_ms: processingTime, method }), null);
+            JSON.stringify({ pii_count: piiCount, processing_time_ms: processingTime, method }), null);
 
     } catch (err) {
         console.error('Processing/Sanitization Error (Detailed):', err.message, err.stack);
