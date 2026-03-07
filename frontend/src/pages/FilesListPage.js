@@ -45,8 +45,7 @@ export default function FilesListPage() {
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;
-            const nameWithoutExt = name.replace(/\.[^/.]+$/, "");
-            link.download = `sanitized_${nameWithoutExt}.txt`;
+            link.download = `sanitized_${name}`;
             link.click();
             window.URL.revokeObjectURL(url);
             toast.success('Download started!');
