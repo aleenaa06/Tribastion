@@ -10,6 +10,7 @@ import {
     HiOutlineColorSwatch, HiOutlineTag
 } from 'react-icons/hi';
 import CyberGlobe from '../components/CyberGlobe';
+import GlobeErrorBoundary from '../components/GlobeErrorBoundary';
 
 export default function LandingPage() {
     const { user } = useAuth();
@@ -83,7 +84,9 @@ export default function LandingPage() {
                         className="relative h-[400px] lg:h-[600px] w-full flex items-center justify-center -mr-10"
                     >
                         <div className="absolute inset-0 bg-cyan-500/5 rounded-full blur-[100px] animate-pulse"></div>
-                        <CyberGlobe />
+                        <GlobeErrorBoundary>
+                            <CyberGlobe />
+                        </GlobeErrorBoundary>
                     </motion.div>
                 </div>
             </section>
