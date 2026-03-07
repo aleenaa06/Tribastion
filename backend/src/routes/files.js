@@ -222,15 +222,20 @@ router.get('/:id/download', authenticateToken, async (req, res) => {
         }
         if (file.status !== 'completed') return res.status(400).json({ error: 'File not yet processed' });
 
-        const downloadPath = file.sanitized_path;
+        // Reconstruct the path using basename to avoid cross-platform absolute path issues (e.g. C:\Users\... on a Linux server)
+        const filename = path.basename(file.sanitized_path || '');
+        const downloadPath = filename ? path.join(__dirname, '..', '..', 'sanitized', filename) : '';
+
         if (!downloadPath || !fs.existsSync(downloadPath)) {
-            return res.status(404).json({ error: 'Sanitized file not found' });
+            return res.status(404).json({ error: 'Sanitized file not found on the server' });
         }
 
         logAudit(req.user.id, req.user.username, 'FILE_DOWNLOAD', 'file', req.params.id,
             JSON.stringify({ filename: file.original_name }), req.ip);
 
-        res.download(downloadPath, `sanitized_${file.original_name}`);
+        const originalExt = path.extname(file.original_name);
+        const nameWithoutExt = file.original_name.replace(originalExt, '');
+        res.download(downloadPath, `sanitized_${nameWithoutExt}.txt`);
     } catch (err) {
         console.error('Download error:', err);
         res.status(500).json({ error: 'Download failed' });
@@ -244,12 +249,15 @@ router.get('/:id/original', authenticateToken, requireRole('admin'), async (req,
         const file = await dbPrepare('SELECT * FROM files WHERE id = ?').get(req.params.id);
 
         if (!file) return res.status(404).json({ error: 'File not found' });
-        if (!fs.existsSync(file.original_path)) return res.status(404).json({ error: 'Original file not found' });
+        const filename = path.basename(file.original_path || '');
+        const downloadPath = filename ? path.join(__dirname, '..', '..', 'uploads', filename) : '';
+
+        if (!downloadPath || !fs.existsSync(downloadPath)) return res.status(404).json({ error: 'Original file not found on the server' });
 
         logAudit(req.user.id, req.user.username, 'FILE_DOWNLOAD_ORIGINAL', 'file', req.params.id,
             JSON.stringify({ filename: file.original_name }), req.ip);
 
-        res.download(file.original_path, file.original_name);
+        res.download(downloadPath, file.original_name);
     } catch (err) {
         console.error('Original download error:', err);
         res.status(500).json({ error: 'Download failed' });

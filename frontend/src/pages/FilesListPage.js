@@ -51,7 +51,8 @@ export default function FilesListPage() {
             window.URL.revokeObjectURL(url);
             toast.success('Download started!');
         } catch (err) {
-            toast.error('Download failed');
+            console.error('Download JS error:', err);
+            toast.error('Download failed: ' + (err.response?.data?.error || err.message));
         }
     };
 
